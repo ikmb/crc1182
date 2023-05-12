@@ -87,17 +87,15 @@ opts.parse!
 undefined_keys = []
 
 # Check for reference metadata info
-metadata_reference = File.dirname(__FILE__) + "/../metadata/2.0/CRC1182_NGS_data_v2.txt"
+metadata_reference = File.dirname(__FILE__) + "/../../metadata/2.0/CRC1182_NGS_data_v2.txt"
 warn metadata_reference
 raise "Could not find the reference metadata sheet" unless File.exists?(metadata_reference)
 
-ref_keys = []
+ref_keys = {}
 IO.readlines(metadata_reference).each do |line|
-    e = line.strip
-    ref_keys << e
+    e,s = line.strip.split("\t")
+    ref_keys[e] = s unless ref_keys.has_key?(e)
 end
-
-ref_keys.compact!
 
 # Parse XLS samplesheet
 ### Convert XLSX to CSV
@@ -136,18 +134,33 @@ end
 
 # Parse the metadata
 
-row = 1
-column = 0
-
+# Get the column  headers
 header = []
-meta.sheet_data[1][0..ref_keys.length].each_with_index do |h,i|
-    header << h.value
-end
+meta.sheet_data[1][0..ref_keys.keys.length].each_with_index do |h,i|
+    header << h.value unless h.value.nil?
+end 
 
-meta.sheet_data[2..300].each do |r|
+# Iterate over each row using the column headers to extract annotations
+# We assume no more than 400 rows, which is usually reasonable
+meta.sheet_data[2..400].each_with_index do |r,idx|
 
+    data = {}
     header.each_with_index do |h,i|
+
         r[i] ? val = r[i].value: val = nil
-        warn "#{h}: #{val}"
+
+        if val && val.length > 0
+             data[h] = val
+        else
+            warn "Missing mandatory value for #{h}" if ref_keys[h] == 1
+        end
+
     end
+
+    f = File.new(data["library_id"] + ".meta", "w+")
+    data.each do |k,v|
+        f.puts "#{k} #{v}"
+    end
+    f.close
+
 end
