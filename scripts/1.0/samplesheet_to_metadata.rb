@@ -39,8 +39,8 @@ class MetaEntry
 
     def initialize(key,value,unit)
         @key = key.strip.split(/\s/).join("_").upcase.gsub(/-/, '_').gsub(/[\(,\)]/, '')
-        @value = value.strip
-        @unit = unit.strip
+        @value = value
+        @unit = unit.capitalize.gsub(/Units.*/, "String")
     
         _sane?
     end
@@ -136,6 +136,11 @@ end
 
 # Parse the metadata
 
+units = []
+meta.sheet_data[0][0..ref_keys.keys.length].each_with_index do |u,i|
+    units << u.value unless u.value.nil?
+end
+
 # Get the column  headers
 header = []
 meta.sheet_data[1][0..ref_keys.keys.length].each_with_index do |h,i|
@@ -163,7 +168,9 @@ meta.sheet_data[2..400].each_with_index do |r,idx|
 
     f = File.new(data["LAB-ID"] + ".meta", "w+")
     data.each do |k,v|
-        f.puts "#{k} #{v}"
+        u = units[header.index(k)]
+        meta = MetaEntry.new(k,v,u)
+        f.puts "#{meta.key}\t#{meta.value}\t#{meta.unit}"
     end
     f.close
 
