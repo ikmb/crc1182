@@ -112,6 +112,11 @@ opts.parse!
 
 BASE_URL = "/sfb1182/home"
 
+ICMD = "singularity run /zfshome/sw/files/singularity-images/irods-icommands.4.3.0.sif"
+has_singularity = `which singularity`
+
+raise "Missing singularity in path!" if has_singularity.include?("no singularity in")
+
 # Example: F13388-L1_S149_L001_R1_001.fastq.gz
 file_groups = Dir.entries(Dir.getwd).select{|e| e.include?(".fastq.gz")}.group_by{|e| e.split("_R")[0] }
 
@@ -143,7 +148,7 @@ file_groups.each do |group,files|
   
   #command = "iput -D tar -f --metadata \"#{meta_string}\" #{tar_file} /CAUZone/sfb1182/#{info['CRC_PROJECT_ID']}/raw_data/#{tar_file}"
 
-  command = "irm -f #{BASE_URL}/research-#{info['CRC_PROJECT_ID'].downcase}/raw_data/#{tar_file}"
+  command = "#{ICMD} irm -f #{BASE_URL}/research-#{info['CRC_PROJECT_ID'].downcase}/raw_data/#{tar_file}"
 
   if options.cleanup
 	  if options.pretend
@@ -153,7 +158,7 @@ file_groups.each do |group,files|
 	  end
   end
     
-  command = "iput -D tar -f #{tar_file} #{BASE_URL}/research-#{info['CRC_PROJECT_ID'].downcase}/raw_data/#{tar_file}"
+  command = "#{ICMD} iput -D tar -f #{tar_file} #{BASE_URL}/research-#{info['CRC_PROJECT_ID'].downcase}/raw_data/#{tar_file}"
 
   if options.pretend
 	warn command  
@@ -162,7 +167,7 @@ file_groups.each do |group,files|
   end
 
   meta_sets.each do |ms|
-  	imeta_cmd = "imeta add -d #{BASE_URL}/research-#{info['CRC_PROJECT_ID'].downcase}/raw_data/#{tar_file} #{ms}"
+  	imeta_cmd = "#{ICMD} imeta add -d #{BASE_URL}/research-#{info['CRC_PROJECT_ID'].downcase}/raw_data/#{tar_file} #{ms}"
   	system imeta_cmd unless options.pretend
   end 
 	    
