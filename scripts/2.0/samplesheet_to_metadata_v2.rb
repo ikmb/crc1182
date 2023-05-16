@@ -89,7 +89,7 @@ undefined_keys = []
 # Check for reference metadata info
 metadata_reference = File.dirname(__FILE__) + "/../../metadata/2.0/CRC1182_NGS_data_v2.txt"
 warn metadata_reference
-raise "Could not find the reference metadata sheet" unless File.exists?(metadata_reference)
+raise "Could not find the reference metadata sheet" unless File.exist?(metadata_reference)
 
 ref_keys = {}
 IO.readlines(metadata_reference).each do |line|
@@ -147,12 +147,13 @@ end
 
 # Iterate over each row using the column headers to extract annotations
 # We assume no more than 400 rows, which is usually reasonable
+
 meta.sheet_data[2..400].each_with_index do |r,idx|
 
     data = {}
     header.each_with_index do |h,i|
 
-        r[i] ? val = r[i].value: val = nil
+        r[i] ? val = r[i].value.to_s : val = nil
 
         if val && val.length > 0
              data[h] = val
@@ -163,11 +164,19 @@ meta.sheet_data[2..400].each_with_index do |r,idx|
     end
 
     f = File.new(data["library_id"] + ".meta", "w+")
+
+    f.puts "crc_project\t#{project_id}\tstring"
+    f.puts "owner_name\t#{principle_investigator}\tstring"
+    f.puts "contact_name\t#{main_contact_name}\tstring"
+    f.puts "contact_email\t#{main_contact_email}\tstring"
+
+
     data.each do |k,v|
 	u = units[header.index(k)]
 	meta = MetaEntry.new(k,v,u)
+        next if meta.value == "NA"
         f.puts "#{meta.key}\t#{meta.value}\t#{meta.unit}"
     end
-    f.close
 
+    f.close
 end

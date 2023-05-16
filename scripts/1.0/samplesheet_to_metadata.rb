@@ -89,7 +89,7 @@ undefined_keys = []
 # Check for reference metadata info
 metadata_reference = File.dirname(__FILE__) + "/../../metadata/2.0/CRC1182_NGS_data_v2.txt"
 
-raise "Could not find the reference metadata sheet" unless File.exists?(metadata_reference)
+raise "Could not find the reference metadata sheet" unless File.exist?(metadata_reference)
 
 ref_keys = {}
 IO.readlines(metadata_reference).each do |line|
@@ -167,6 +167,12 @@ meta.sheet_data[2..400].each_with_index do |r,idx|
     next unless data.keys.length > 0
 
     f = File.new(data["LAB-ID"] + ".meta", "w+")
+
+    f.puts "CRC_PROJECT_ID\t#{project_id}\tstring"
+    f.puts "PRINCIPLE_INVESTIGATOR\t#{principle_investigator}\tstring"
+    f.puts "MAIN_CONTACT_NAME\t#{main_contact_name}\tstring"
+    f.puts "MAIN_CONTACT_EMAIL\t#{main_contact_email}\tstring"
+
     data.each do |k,v|
         u = units[header.index(k)]
         meta = MetaEntry.new(k,v,u)

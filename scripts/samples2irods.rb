@@ -88,6 +88,9 @@ def extract_library_id(read_name)
 	# 21Nov52-DL070_S70_L001_R2_001.fastq.gz
 	if read_name.match(/^[0-9]+[A-Za-z]+[0-9]+-[A-Z]+[0-9]+_S.*/)
 		return read_name.split("_S")[0]
+        # 220600000501-DS104_22Jun501-DL104_S104_L001
+        elsif read_name.match(/[0-9]+-[A-Z0-9]+_[0-9][0-9][A-Za-z]+[0-9]+-.*/)
+		return read_name.split("_")[1]
 	# J39655-L1_S77_L001_R1_001.fastq.gz
 	elsif read_name.match(/^[A-Z0-9]+-L[0-9]_S.*/)
 		return read_name.split("-")[0]
@@ -112,7 +115,7 @@ opts.parse!
 
 BASE_URL = "/sfb1182/home"
 
-ICMD = "singularity run /zfshome/sw/files/singularity-images/irods-icommands.4.3.0.sif"
+ICMD = "singularity exec -B /work_beegfs /zfshome/sw/files/singularity-images/irods-icommands.4.3.0.sif"
 has_singularity = `which singularity`
 
 raise "Missing singularity in path!" if has_singularity.include?("no singularity in")
@@ -125,19 +128,20 @@ file_groups.each do |group,files|
   warn "Processing data set #{group}"  
   library_id = extract_library_id(group) 
   warn library_id
-  metadata = library_id + ".metadata"
+  metadata = library_id + ".meta"
 
-  abort "Could not find the metadata sheet (#{metadata}) for the sample #{group}" unless File.exists?(metadata)
+  abort "Could not find the metadata sheet (#{metadata}) for the sample #{group}" unless File.exist?(metadata)
   
-  next unless File.exists?(metadata)
+  next unless File.exist?(metadata)
 
   meta_string = metadata_to_string(metadata)
   info = metadata_to_info(metadata)
+
   meta_sets = metadata_to_imeta(metadata)
 
   tar_file = group + ".tar"
   
-  unless File.exists?(tar_file)
+  unless File.exist?(tar_file)
     this_command = "tar -cvf #{tar_file} #{group}* #{metadata}"
     if options.pretend
        warn this_command
