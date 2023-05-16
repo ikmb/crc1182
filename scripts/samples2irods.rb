@@ -91,6 +91,9 @@ def extract_library_id(read_name)
         # 220600000501-DS104_22Jun501-DL104_S104_L001
         elsif read_name.match(/[0-9]+-[A-Z0-9]+_[0-9][0-9][A-Za-z]+[0-9]+-.*/)
 		return read_name.split("_")[1]
+	# 221200000966_22Dez966-L1_S20_L002_R2_001.fastq.gz
+        elsif read_name.match(/[0-9]+_[A-Za-z0-9]+-L[0-9]_.*/)
+		return read_name.split("_")[1]
 	# J39655-L1_S77_L001_R1_001.fastq.gz
 	elsif read_name.match(/^[A-Z0-9]+-L[0-9]_S.*/)
 		return read_name.split("-")[0]
@@ -137,6 +140,7 @@ file_groups.each do |group,files|
   meta_string = metadata_to_string(metadata)
   info = metadata_to_info(metadata)
 
+  info.has_key?("crc_project") ? project_id = info["crc_project"] : project_id = info["CRC_PROJECT_ID"]
   meta_sets = metadata_to_imeta(metadata)
 
   tar_file = group + ".tar"
@@ -152,7 +156,7 @@ file_groups.each do |group,files|
   
   #command = "iput -D tar -f --metadata \"#{meta_string}\" #{tar_file} /CAUZone/sfb1182/#{info['CRC_PROJECT_ID']}/raw_data/#{tar_file}"
 
-  command = "#{ICMD} irm -f #{BASE_URL}/research-#{info['CRC_PROJECT_ID'].downcase}/raw_data/#{tar_file}"
+  command = "#{ICMD} irm -f #{BASE_URL}/research-#{project_id.downcase}/raw_data/#{tar_file}"
 
   if options.cleanup
 	  if options.pretend
@@ -162,7 +166,7 @@ file_groups.each do |group,files|
 	  end
   end
     
-  command = "#{ICMD} iput -D tar -f #{tar_file} #{BASE_URL}/research-#{info['CRC_PROJECT_ID'].downcase}/raw_data/#{tar_file}"
+  command = "#{ICMD} iput -D tar -f #{tar_file} #{BASE_URL}/research-#{project_id.downcase}/raw_data/#{tar_file}"
 
   if options.pretend
 	warn command  
@@ -171,7 +175,7 @@ file_groups.each do |group,files|
   end
 
   meta_sets.each do |ms|
-  	imeta_cmd = "#{ICMD} imeta add -d #{BASE_URL}/research-#{info['CRC_PROJECT_ID'].downcase}/raw_data/#{tar_file} #{ms}"
+  	imeta_cmd = "#{ICMD} imeta add -d #{BASE_URL}/research-#{project_id.downcase}/raw_data/#{tar_file} #{ms}"
   	system imeta_cmd unless options.pretend
   end 
 	    
