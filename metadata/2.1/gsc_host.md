@@ -5,9 +5,9 @@ Established: June 2023
 
 ## Sample sheet
 
-GSC MIxS host-associated, sheet v2.1 [XLSX](GSC MIxS host associated)
+GSC MIxS host-associated, sheet v2.1 [XLSX](ERC000013.xlsx)
 
-This standard was devined by the genomics standards consortium and is compatible with the ENA metadata guidelines. 
+This standard was defined by the [Genomics Standards Consortium](https://www.gensc.org/) and is compatible with the ENA metadata guidelines. 
 
 ## Defined keys
 
