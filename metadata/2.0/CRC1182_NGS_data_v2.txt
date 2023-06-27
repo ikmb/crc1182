@@ -1,91 +1,91 @@
-adapters_R1
-adapters_R2
-amount_or_size_of_sample_collected
-broad_scale_environmental_context
-collection_date
-comment
-common_name
-contact_email
-contact_name
-crc_project
-enviornment_location_land_or_sea
-environmental_medium
-environment_biome
-environment_feature
-environment_material
-environment_temperature
-experimental_factor
-file_format
-flowcell_id
-flowcell_lane
-geographic_location_altitude
-geographic_location_country
-geographic_location_depth
-geographic_location_latitude
-geographic_location_longitude
-host_age
-host_body_habitat
-host_body_product
-host_body_site
-host_common_name
-host_diet
-host_disease_status
-host_dry_mass
-host_growth_condition
-host_height
-host_length
-host_life_stage
-host_phenotype
-host_sex
-host_subject_id
-host_substrate
-host_taxid
-host_total_mass
-investigation_type
-known_pathogenicity
-library_construction_method
-library_id
-library_read_group_id
-library_read_length
-library_reads_sequenced
-library_sample_type
-library_screening_strategy
-library_size
-library_vector
-local_environmental_context
-multiplex_identifier_fwd
-multiplex_identifier_rev
-nucleic_acid_amplification
-nucleic_acid_extraction
-organism_count
-owner_email
-owner_name
-oxygenation_status_of_sample
-pcr_conditions
-pcr_primers_fwd
-pcr_primers_rev
-pertubation
-ploidy
-project_name
-propagation
-relationship_to_oxygen
-relevant_standard_operating_procedures
-sample_barcode
-sample_collecting_device_or_method
-sample_description
-sample_material_processing
-sample_name
-sample_salinity
-sample_storage_duration
-sample_storage_location
-sample_storage_temperature
-sample_volume_or_weight_for_dna_extraction
-scientific_name
-sequencing_centre
-sequencing_date
-sequencing_method
-sequencing_platform
-source_material_identifier
-target_gene
-target_subfragment
-tax_id
+adapters_R1	0
+adapters_R2	0
+amount_or_size_of_sample_collected	0
+broad_scale_environmental_context	0
+collection_date	0
+comment	0
+common_name	0
+contact_email	1
+contact_name	1
+crc_project	1
+enviornment_location_land_or_sea	0
+environmental_medium	0
+environment_biome	0
+environment_feature	0
+environment_material	0
+environment_temperature	0
+experimental_factor	0
+file_format	0
+flowcell_id	0
+flowcell_lane	0
+geographic_location_altitude	0
+geographic_location_country	0
+geographic_location_depth	0
+geographic_location_latitude	0
+geographic_location_longitude	0
+host_age	0
+host_body_habitat	0
+host_body_product	0
+host_body_site	0
+host_common_name	0
+host_diet	0
+host_disease_status	0
+host_dry_mass	0
+host_growth_condition	0
+host_height	0
+host_length	0
+host_life_stage	0
+host_phenotype	0
+host_sex	0
+host_subject_id	0
+host_substrate	0
+host_taxid	0
+host_total_mass	0
+investigation_type	0
+known_pathogenicity	0
+library_construction_method	1
+library_id	1
+library_read_group_id	0
+library_read_length	0
+library_reads_sequenced	0
+library_sample_type	0
+library_screening_strategy	0
+library_size	0
+library_vector	0
+local_environmental_context	0
+multiplex_identifier_fwd	0
+multiplex_identifier_rev	0
+nucleic_acid_amplification	0
+nucleic_acid_extraction	0
+organism_count	0
+owner_email	1
+owner_name	1
+oxygenation_status_of_sample	0
+pcr_conditions	0
+pcr_primers_fwd	0
+pcr_primers_rev	0
+pertubation	0
+ploidy	0
+project_name	0
+propagation	0
+relationship_to_oxygen	0
+relevant_standard_operating_procedures	0
+sample_barcode	0
+sample_collecting_device_or_method	0
+sample_description	0
+sample_material_processing	0
+sample_name	1
+sample_salinity	0
+sample_storage_duration	0
+sample_storage_location	0
+sample_storage_temperature	0
+sample_volume_or_weight_for_dna_extraction	0
+scientific_name	0
+sequencing_centre	0
+sequencing_date	0
+sequencing_method	1
+sequencing_platform	1
+source_material_identifier	0
+target_gene	0
+target_subfragment	0
+tax_id	0

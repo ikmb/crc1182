@@ -1,7 +1,6 @@
 ![CRC Logo](/images/logo-en_black.png)
 
 # CRC1182 - iRODS user instructions
-- update needed -
  
 # Abstract
 

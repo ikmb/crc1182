@@ -6,4 +6,4 @@
 
 [samples2irods.rb](samples2irods.rb) - load samples in current directory into iRODS using their accopmanying metadata sheets. 
 
-[samplesheet_to_metadata.rb](samplesheet_to_metadata.rb) - Convert a samplesheet in XLS format to tabular format per sequencing library
+[samplesheet_to_metadata.rb](2.0/samplesheet_to_metadata_v2.rb) - Convert a samplesheet in XLS format to tabular format per sequencing library

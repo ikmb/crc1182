@@ -2,6 +2,8 @@
 
 Established: January 2023
 
+This metadata standard is based on standards published by the [Genomic Standards Consortium](http://www.gensc.org/pages/standards/all-terms.html)
+
 ## Sample sheet
 
 CRC1182 NGS sample sheet v2 [XLSX](CRC1182_NGS_data_v2.xlsx)

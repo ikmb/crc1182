@@ -38,7 +38,7 @@ class MetaEntry
     attr_accessor :key, :value, :unit
 
     def initialize(key,value,unit)
-        @key = key.strip.split(/\s/).join("_").upcase.gsub(/-/, '_').gsub(/[\(,\)]/, '')
+        @key = key.strip
         @value = value.strip
         @unit = unit.strip
     
@@ -87,17 +87,15 @@ opts.parse!
 undefined_keys = []
 
 # Check for reference metadata info
-metadata_reference = File.dirname(__FILE__) + "/../metadata/2.0/CRC1182_NGS_data_v2.txt"
+metadata_reference = File.dirname(__FILE__) + "/../../metadata/2.0/CRC1182_NGS_data_v2.txt"
 warn metadata_reference
-raise "Could not find the reference metadata sheet" unless File.exists?(metadata_reference)
+raise "Could not find the reference metadata sheet" unless File.exist?(metadata_reference)
 
-ref_keys = []
+ref_keys = {}
 IO.readlines(metadata_reference).each do |line|
-    e = line.strip
-    ref_keys << e
+    e,s = line.strip.split("\t")
+    ref_keys[e] = s unless ref_keys.has_key?(e)
 end
-
-ref_keys.compact!
 
 # Parse XLS samplesheet
 ### Convert XLSX to CSV
@@ -136,18 +134,49 @@ end
 
 # Parse the metadata
 
-row = 1
-column = 0
-
-header = []
-meta.sheet_data[1][0..ref_keys.length].each_with_index do |h,i|
-    header << h.value
+units = []
+meta.sheet_data[0][0..ref_keys.keys.length].each_with_index do |u,i|
+    units << u.value unless u.value.nil?
 end
 
-meta.sheet_data[2..300].each do |r|
+# Get the column  headers
+header = []
+meta.sheet_data[1][0..ref_keys.keys.length].each_with_index do |h,i|
+    header << h.value unless h.value.nil?
+end 
 
+# Iterate over each row using the column headers to extract annotations
+# We assume no more than 400 rows, which is usually reasonable
+
+meta.sheet_data[2..400].each_with_index do |r,idx|
+
+    data = {}
     header.each_with_index do |h,i|
-        r[i] ? val = r[i].value: val = nil
-        warn "#{h}: #{val}"
+
+        r[i] ? val = r[i].value.to_s : val = nil
+
+        if val && val.length > 0
+             data[h] = val
+        else
+            warn "Missing mandatory value for #{h}" if ref_keys[h] == 1
+        end
+
     end
+
+    f = File.new(data["library_id"] + ".meta", "w+")
+
+    f.puts "crc_project\t#{project_id}\tstring"
+    f.puts "owner_name\t#{principle_investigator}\tstring"
+    f.puts "contact_name\t#{main_contact_name}\tstring"
+    f.puts "contact_email\t#{main_contact_email}\tstring"
+
+
+    data.each do |k,v|
+	u = units[header.index(k)]
+	meta = MetaEntry.new(k,v,u)
+        next if meta.value == "NA"
+        f.puts "#{meta.key}\t#{meta.value}\t#{meta.unit}"
+    end
+
+    f.close
 end
