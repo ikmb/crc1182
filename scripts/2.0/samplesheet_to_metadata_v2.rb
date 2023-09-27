@@ -88,7 +88,7 @@ undefined_keys = []
 
 # Check for reference metadata info
 metadata_reference = File.dirname(__FILE__) + "/../../metadata/2.0/CRC1182_NGS_data_v2.txt"
-warn metadata_reference
+
 raise "Could not find the reference metadata sheet" unless File.exist?(metadata_reference)
 
 ref_keys = {}
@@ -100,8 +100,9 @@ end
 # Parse XLS samplesheet
 ### Convert XLSX to CSV
 xlsx = RubyXL::Parser.parse(options.infile)
-front = xlsx["Submitter_Information"]
-meta = xlsx["Metadata"]
+
+front = xlsx["Submitter_Information"] || raise("Missing submitter page!")
+meta = xlsx["Metadata"] || raise("Missing metadata page!")
 
 ### Get project information from first sheet
 
@@ -111,7 +112,9 @@ main_contact_email = nil
 principle_investigator = nil
 
 front[1..5].each do |row|
+
     key = row[0].value
+
     row[1] ? val = row[1].value : val = nil
 
     case key
@@ -119,7 +122,7 @@ front[1..5].each do |row|
         main_contact_email = val
     when "contact_name"
         main_contact_name = val
-    when "crc_project"
+    when "project_id"
         project_id = val
     when "owner_name"
         principle_investigator = val
@@ -142,7 +145,7 @@ end
 # Get the column  headers
 header = []
 meta.sheet_data[1][0..ref_keys.keys.length].each_with_index do |h,i|
-    header << h.value unless h.value.nil?
+    header << h.value.gsub(" ", "_") unless h.value.nil?
 end 
 
 # Iterate over each row using the column headers to extract annotations
@@ -156,7 +159,7 @@ meta.sheet_data[2..400].each_with_index do |r,idx|
         r[i] ? val = r[i].value.to_s : val = nil
 
         if val && val.length > 0
-             data[h] = val
+            data[h] = val
         else
             warn "Missing mandatory value for #{h}" if ref_keys[h] == 1
         end
